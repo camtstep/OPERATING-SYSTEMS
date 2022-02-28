@@ -1,0 +1,24 @@
+Cameron Stepanski
+xxxxx
+Dr. J. Marcos Palacios
+CS 4328 Operating Systems
+October 8, 2021
+Programming Assignment 1 Report
+Overview:
+Our program runs by taking a seed and uses that as the random seed generator. It creates the player structures and assigns them to a player array. It then creates a pthread and initializes the deck to use mutex. A for loop controls the number of rounds. When a new round begins the initialize deck function runs and then the dealer pthread is created. When finished, it joins the rest of the threads. Once all pthreads are joined the round is complete. While a winner isn’t found pthreads are created endlessly until one is found. Once a winner is found the pthreads will be joined together fully and they can continue. At the end of the round the print round function will start and show which player won with the winning hand as well as the other player’s hands. Then the players will exit the round and clear their hands. The hands will be recorded to the log and then winner found will be set to 0 and the round number will go up. Round number continues to go up until the limit is reached. At the very end the mutex will be deleted and pthread exit will run to make sure all threads are closed.
+Functions:
+initialize_deck – places each card into the deck.
+dealer_start – shuffles the hand and then deals it out to the players depending on the round number, send a broadcast that the pthread variable next is sent, at the end pthread exits.
+player_start – checks if a winner is found, if not it locks mutex deck use and while winner is not found and it’s not the players turn it will have a conditional variable wait for next to occur and for mutex to be unlocked. If player is not found it will take the function take_turn, mutex decks use is unlocked. And then pthread ends.
+take_turn – prints out the player’s hand and then has the player draw a card after which it checks if the player’s 2 cards are a pair, if so winner found and log that that player wins, if not discard a card and starter_turn goes up. And if starter turn is greater than number of players revert back to 1.
+discard_card – chooses a random position between 1 and 0 and removes that from the players hand and places it on the bottom of the deck. Also logs what’s happening.
+player_draw – the player draws a card from the top of the deck and logs which card was drawn.
+player_print – checks the size of the hand and prints out every card in that player’s hand onto the log.
+deck_print – print the remaining deck onto the log.
+draw_top_card – pops the top card off the deque and returns to whatever called it.
+print_round_on_screen – will run through all players with 2 cards in their hand to find out which one is the winner and then goes through and shows the cards in each players hands and if they won or lost in that round onto the console. After that is shows the remaining deck on the screen.
+log_entry – takes a string and outputs it onto the existing game log file.
+
+Compile Instructions:
+g++ main.cpp -pthread -std=c++11
+./a.out <seed>
